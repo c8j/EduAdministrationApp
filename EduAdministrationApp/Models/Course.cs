@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace EduAdministrationApp.Models;
 
 public class Course
@@ -11,6 +13,7 @@ public class Course
     public List<int> StudentIDs { get; }
     public List<int> TeacherIDs { get; }
 
+    [JsonConstructor]
     public Course(List<int> teacherIDs, List<int> studentIDs)
     {
         if (teacherIDs is null || teacherIDs.Count <= 0)
