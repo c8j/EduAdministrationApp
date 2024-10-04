@@ -1,6 +1,6 @@
 namespace EduAdministrationApp.Models;
 
-public class DepartmentHead : Teacher
+public class DepartmentHead(List<int> courseIDs) : Teacher(courseIDs)
 {
-    public DateTime EmployedOn { get; init; }
+    public required DateTime EmployedOn { get; init; }
 }

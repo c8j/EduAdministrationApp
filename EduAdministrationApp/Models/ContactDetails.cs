@@ -8,5 +8,4 @@ public record ContactDetails
     public required string AddressLine { get; init; }
     public required string PostalCode { get; init; }
     public required string City { get; init; }
-
 }

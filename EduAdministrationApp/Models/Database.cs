@@ -11,13 +11,15 @@ public static class Database
     {
         NotEnoughTeachers,
         CourseNullList,
+        TeacherNullCourseList,
         NullReference
     }
     public static readonly Dictionary<Prompt, string> Prompts = new()
     {
         {Prompt.NotEnoughTeachers, "Kursen {0} behöver minst en lärare."}, //0 - course ID
         {Prompt.CourseNullList, "Kursen {0} fick en noll lista. Kontrollera JSON-data."}, //0 - course ID
-        {Prompt.NullReference, "Fick noll referens när försökte läsa JSON-objekt."}
+        {Prompt.TeacherNullCourseList, "Läraren {0} fick en noll kurslista. Kontrollera JSON-data."}, //0 - teacher ID
+        {Prompt.NullReference, "Fick noll referens när försökte läsa JSON-objekt för {0}. Kontrollera JSON-data."} //0 - object type
     };
 
     private static readonly JsonSerializerOptions s_jsonOptions = new()
@@ -35,7 +37,7 @@ public static class Database
     public static T ReadObjectFromFile<T>(string path)
     {
         T? tempObject = JsonSerializer.Deserialize<T>(File.ReadAllText(path), s_jsonOptions) ??
-         throw new NullReferenceException(Prompts[Prompt.NullReference]);
+         throw new NullReferenceException(string.Format(Prompts[Prompt.NullReference], typeof(T)));
         return tempObject;
     }
 }
