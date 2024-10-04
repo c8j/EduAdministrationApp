@@ -15,13 +15,13 @@ public class Course
     {
         if (teacherIDs is null || teacherIDs.Count <= 0)
         {
-            throw new Exception($"Kursen {ID} behöver minst en lärare.");
+            throw new Exception(string.Format(Database.Prompts[Database.Prompt.NotEnoughTeachers], ID));
         }
 
         TeacherIDs = teacherIDs;
         if (studentIDs is null)
         {
-            throw new NullReferenceException($"Kursen {ID} fick en noll lista. Kontrollera JSON-data.");
+            throw new NullReferenceException(string.Format(Database.Prompts[Database.Prompt.CourseNullList], ID));
         }
         StudentIDs = studentIDs;
     }
