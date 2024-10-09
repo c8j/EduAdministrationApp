@@ -26,7 +26,8 @@ public static class Database
     {
         Staff,
         Courses,
-        Students
+        Students,
+        Menu
     }
 
     private static readonly string _dataPath = $"{Environment.CurrentDirectory}/data/";
@@ -62,13 +63,13 @@ public static class Database
 
     static Database()
     {
-        s_staff = File.Exists(GetFilePath(Filename.Staff)) ? ReadObjectFromFile<List<Teacher>>(GetFilePath(Filename.Staff)) : [];
+        s_staff = LoadFilelist<Teacher>(Filename.Staff);
         Staff = s_staff.AsReadOnly();
 
-        s_courses = File.Exists(GetFilePath(Filename.Courses)) ? ReadObjectFromFile<List<Course>>(GetFilePath(Filename.Courses)) : [];
+        s_courses = LoadFilelist<Course>(Filename.Courses);
         Courses = s_courses.AsReadOnly();
 
-        s_students = File.Exists(GetFilePath(Filename.Students)) ? ReadObjectFromFile<List<Student>>(GetFilePath(Filename.Students)) : [];
+        s_students = LoadFilelist<Student>(Filename.Students);
         Students = s_students.AsReadOnly();
     }
 
@@ -77,23 +78,38 @@ public static class Database
         return string.Format(_filePath, filename.ToString().ToLower());
     }
 
-    private static void SaveObjectToFile<T>(string path, T serializableObject)
+    private static void SaveObjectToFile<T>(Filename filename, T serializableObject)
     {
-        File.WriteAllText(path, JsonSerializer.Serialize(serializableObject, s_jsonOptions));
+        File.WriteAllText(GetFilePath(filename), JsonSerializer.Serialize(serializableObject, s_jsonOptions));
     }
 
-    private static T ReadObjectFromFile<T>(string path)
+    private static T ReadObjectFromFile<T>(Filename filename)
     {
-        T? tempObject = JsonSerializer.Deserialize<T>(File.ReadAllText(path), s_jsonOptions) ??
+        T? tempObject = JsonSerializer.Deserialize<T>(File.ReadAllText(GetFilePath(filename)), s_jsonOptions) ??
          throw new NullReferenceException(string.Format(Prompts[Prompt.NullReference], typeof(T)));
         return tempObject;
     }
 
+    private static List<T> LoadFilelist<T>(Filename filename)
+    {
+        return File.Exists(GetFilePath(filename)) ? ReadObjectFromFile<List<T>>(filename) : [];
+    }
+
+    public static List<Menu> LoadMenu()
+    {
+        return LoadFilelist<Menu>(Filename.Menu);
+    }
+
+    public static string MenuFilePath()
+    {
+        return GetFilePath(Filename.Menu);
+    }
+
     public static void SaveDataToFile()
     {
-        SaveObjectToFile(GetFilePath(Filename.Staff), s_staff);
-        SaveObjectToFile(GetFilePath(Filename.Courses), s_courses);
-        SaveObjectToFile(GetFilePath(Filename.Students), s_students);
+        SaveObjectToFile(Filename.Staff, s_staff);
+        SaveObjectToFile(Filename.Courses, s_courses);
+        SaveObjectToFile(Filename.Students, s_students);
     }
 
     private static void AddItem<T>(T item, int itemID, List<T> list, Prompt duplicateExceptionPrompt)
