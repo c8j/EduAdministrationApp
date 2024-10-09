@@ -1,6 +1,6 @@
 ﻿using EduAdministrationApp.Models;
 
-var today = DateTime.Today;
+/* var today = DateTime.Today;
 var weeks = 12;
 Course testCourse = new([])
 {
@@ -76,5 +76,4 @@ var dataObject = new
     Teachers = new List<Teacher>([testTeacher1, testTeacher2]),
     Students = new List<Student>([testStudent1, testStudent2])
 };
-
-Database.SaveObjectToFile($"{Environment.CurrentDirectory}/data/database.json", dataObject);
+ */
