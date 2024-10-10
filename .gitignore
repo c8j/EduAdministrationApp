@@ -485,3 +485,5 @@ $RECYCLE.BIN/
 
 #Project-specific: data files
 EduAdministrationApp/data/*
+!EduAdministrationApp/data/menuprompts.json
+!EduAdministrationApp/data/prompts.json
