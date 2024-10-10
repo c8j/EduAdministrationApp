@@ -1,6 +1,6 @@
 namespace EduAdministrationApp.Models;
 
-public class Menu()
+public class Menu(Action? dataAction, List<MenuItem> menuItems)
 {
     enum Prompt
     {
@@ -15,32 +15,41 @@ public class Menu()
         {Prompt.Input, "Välj alternativ: "},
         {Prompt.Return, "Gå tillbaka"},
         {Prompt.Exit, "Avsluta programmet"},
-        {Prompt.InvalidOption, "Vänligen ange ett giltigt alternativ."},
+        {Prompt.InvalidOption, "Vänligen infoga ett giltigt alternativ."},
     };
 
-    public readonly List<MenuItem> MenuItems = [];
+    private readonly List<MenuItem> _menuItems = menuItems;
+    private readonly Action? _dataAction = dataAction;
     private static int s_depth = -1;
 
-    public void Display()
+    private void DisplayMenu()
     {
-        Console.Clear();
-        for (int i = 0; i < MenuItems.Count; i++)
+        if (_dataAction is not null)
         {
-            Console.WriteLine($"{i + 1}: {MenuItems[i].Text}");
+            _dataAction();
+        }
+
+        Console.WriteLine(new string('-', 100));
+        for (int i = 0; i < _menuItems.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}: {_menuItems[i].Text}");
         }
         Console.WriteLine(
-            $"{MenuItems.Count + 1}: {(s_depth == 0 ? Prompts[Prompt.Exit] : Prompts[Prompt.Return])}");
+            $"{_menuItems.Count + 1}: {(s_depth == 0 ? Prompts[Prompt.Exit] : Prompts[Prompt.Return])}");
         Console.WriteLine(new string('-', 100));
     }
 
     private uint GetInput()
     {
+        DisplayMenu();
         Console.Write(Prompts[Prompt.Input]);
         uint choice = uint.TryParse(Console.ReadLine(), out choice) ? choice : 0;
-        while (choice < 1 || choice > MenuItems.Count + 1)
+        while (choice < 1 || choice > _menuItems.Count + 1)
         {
+            Console.Clear();
+            DisplayMenu();
             Console.WriteLine(
-                $"{Environment.NewLine}{Prompts[Prompt.InvalidOption]}{Environment.NewLine}");
+                $"{Prompts[Prompt.InvalidOption]}");
             Console.Write(Prompts[Prompt.Input]);
             choice = uint.TryParse(Console.ReadLine(), out choice) ? choice : 0;
         }
@@ -52,17 +61,18 @@ public class Menu()
         s_depth++;
         while (true)
         {
-            Display();
             uint choice = GetInput();
-            if (choice == MenuItems.Count + 1)
+            Console.Clear();
+            if (choice == _menuItems.Count + 1)
             {
                 break;
             }
             else
             {
-                MenuItems[(int)choice - 1].Action();
+                _menuItems[(int)choice - 1].Action();
             }
         }
         s_depth--;
     }
+
 }
