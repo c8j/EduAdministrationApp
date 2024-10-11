@@ -1,6 +1,6 @@
 namespace EduAdministrationApp.Models;
 
-public class Teacher : IIdentifiable
+public class Teacher : IIdentifiable, IContactable
 {
     public required int ID { get; init; }
     public required ContactDetails ContactDetails { get; init; }
@@ -31,8 +31,21 @@ public class Teacher : IIdentifiable
         _courseIDs.Remove(courseID);
     }
 
+    private string GetCourseNames()
+    {
+        StringWriter sw = new();
+        foreach (int id in _courseIDs)
+        {
+            Course course = Database.Courses.First(course => course.ID == id);
+            sw.Write($"{id} - {course.Title}, ");
+        }
+        return sw.ToString().TrimEnd(',');
+    }
+
     public override string ToString()
     {
-        return $"ID: {ID}, Utbildningsområde: {Department}, {ContactDetails}";
+        return
+            $"ID: {ID}, Utbildningsområde: {Department}, {ContactDetails}" +
+            $"{(_courseIDs.Count > 0 ? "{Environment.NewLine} > Kurser: [{GetCourseNames()}]" : "")}";
     }
 }

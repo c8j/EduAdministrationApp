@@ -99,6 +99,12 @@ public static class Database
         Administrator
     }
 
+    public enum EntityType
+    {
+        Student,
+        Teacher
+    }
+
     private static readonly string _dataPath = $"{Environment.CurrentDirectory}/data/";
     private static readonly string _filePath = _dataPath + "{0}.json";
 
@@ -116,6 +122,9 @@ public static class Database
     private static readonly List<Teacher> s_staff;
     private static readonly List<Course> s_courses;
     private static readonly List<Student> s_students;
+    public static readonly IReadOnlyList<Teacher> Staff;
+    public static readonly IReadOnlyList<Course> Courses;
+    public static readonly IReadOnlyList<Student> Students;
     public static MenuManager MenuManager { get; }
 
     static Database()
@@ -123,8 +132,11 @@ public static class Database
         s_prompts = ReadObjectFromFile<Dictionary<Prompt, string>>(Filename.Prompts);
         s_menuOptionPrompts = ReadObjectFromFile<Dictionary<MenuOptionPrompt, string>>(Filename.MenuPrompts);
         s_staff = LoadFilelist<Teacher>(Filename.Staff);
+        Staff = s_staff.AsReadOnly();
         s_courses = LoadFilelist<Course>(Filename.Courses);
+        Courses = s_courses.AsReadOnly();
         s_students = LoadFilelist<Student>(Filename.Students);
+        Students = s_students.AsReadOnly();
         MenuManager = CreateHardcodedMenu();
     }
 
