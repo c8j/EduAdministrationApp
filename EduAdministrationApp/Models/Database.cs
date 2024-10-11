@@ -111,6 +111,13 @@ public static class Database
     private static readonly Dictionary<Prompt, string> s_prompts;
     private static readonly Dictionary<MenuOptionPrompt, string> s_menuOptionPrompts;
 
+    private static readonly Dictionary<StaffType, Type> s_staffType = new()
+    {
+        {StaffType.Teacher, typeof(Teacher)},
+        {StaffType.DepartmentHead, typeof(DepartmentHead)},
+        {StaffType.Administrator, typeof(Administrator)}
+    };
+
     private static readonly JsonSerializerOptions s_jsonOptions = new()
     {
         WriteIndented = true,
@@ -392,17 +399,14 @@ public static class Database
         if (staffType is StaffType.Teacher)
         {
             idPrompt = Prompt.TeacherID;
-            alreadyExistsPrompt = Prompt.TeacherAlreadyExists;
         }
         else if (staffType is StaffType.DepartmentHead)
         {
             idPrompt = Prompt.DepartmentHeadID;
-            alreadyExistsPrompt = Prompt.DepartmentHeadAlreadyExists;
         }
         else
         {
             idPrompt = Prompt.AdministratorID;
-            alreadyExistsPrompt = Prompt.AdministratorAlreadyExists;
         }
 
         //ID
@@ -411,8 +415,22 @@ public static class Database
         {
             Console.WriteLine(s_prompts[Prompt.InvalidEntry]);
         }
-        if (s_staff.Any(staffMember => staffMember.ID == id))
+
+        Teacher? foundStaff = s_staff.FirstOrDefault(staffMember => staffMember.ID == id);
+        if (foundStaff is not null)
         {
+            if (foundStaff is Teacher)
+            {
+                alreadyExistsPrompt = Prompt.TeacherAlreadyExists;
+            }
+            else if (foundStaff is DepartmentHead)
+            {
+                alreadyExistsPrompt = Prompt.DepartmentHeadAlreadyExists;
+            }
+            else
+            {
+                alreadyExistsPrompt = Prompt.AdministratorAlreadyExists;
+            }
             Console.WriteLine(string.Format(s_prompts[alreadyExistsPrompt], id));
             return;
         }
@@ -568,7 +586,12 @@ public static class Database
                 Console.WriteLine(s_prompts[Prompt.InvalidEntry]);
                 continue;
             }
-            Teacher? staffMemberToRemove = s_staff.FirstOrDefault(staffMember => staffMember.ID == id);
+
+            Teacher? staffMemberToRemove = s_staff.FirstOrDefault(
+                staffMember => (staffMember.ID == id) &&
+                (staffMember.GetType() == s_staffType[staffType])
+
+            );
             if (staffMemberToRemove is null)
             {
                 Console.WriteLine(s_prompts[notFoundPrompt]);
