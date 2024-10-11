@@ -181,7 +181,7 @@ public static class Database
         }
         else
         {
-            Console.WriteLine($"{s_prompts[Prompt.EmptyDataset]}{Environment.NewLine}");
+            Console.WriteLine($"{s_prompts[Prompt.EmptyDataset]}");
         };
     }
 
