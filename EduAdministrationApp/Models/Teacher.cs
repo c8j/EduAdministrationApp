@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace EduAdministrationApp.Models;
 
-
+[JsonDerivedType(typeof(DepartmentHead), typeDiscriminator: "depHead")]
+[JsonDerivedType(typeof(Administrator), typeDiscriminator: "admin")]
 public class Teacher : IIdentifiable, IContactable
 {
     public required int ID { get; init; }
