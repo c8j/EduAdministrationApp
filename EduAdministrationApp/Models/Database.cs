@@ -203,7 +203,7 @@ public static class Database
         }
         if (s_courses.Any(course => course.ID == id))
         {
-            Console.WriteLine(s_prompts[Prompt.CourseAlreadyExists]);
+            Console.WriteLine(string.Format(s_prompts[Prompt.CourseAlreadyExists], id));
             return;
         }
 
@@ -413,7 +413,7 @@ public static class Database
         }
         if (s_staff.Any(staffMember => staffMember.ID == id))
         {
-            Console.WriteLine(s_prompts[alreadyExistsPrompt]);
+            Console.WriteLine(string.Format(s_prompts[alreadyExistsPrompt], id));
             return;
         }
 
@@ -591,7 +591,7 @@ public static class Database
         }
         if (s_students.Any(student => student.ID == id))
         {
-            Console.WriteLine(s_prompts[Prompt.StudentAlreadyExists]);
+            Console.WriteLine(string.Format(s_prompts[Prompt.StudentAlreadyExists], id));
             return;
         }
 
