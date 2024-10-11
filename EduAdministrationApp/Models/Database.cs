@@ -956,7 +956,7 @@ public static class Database
         var teacherMenu = new Menu(
             () =>
             {
-                DisplayData(s_staff.OfType<Teacher>().ToList());
+                DisplayData(s_staff.FindAll(staffMember => staffMember.GetType() == typeof(Teacher)));
             },
             [
                 new MenuItem(
@@ -993,7 +993,7 @@ public static class Database
         var departmentHeadMenu = new Menu(
             () =>
             {
-                DisplayData(s_staff.OfType<DepartmentHead>().ToList());
+                DisplayData(s_staff.FindAll(staffMember => staffMember.GetType() == typeof(DepartmentHead)));
             },
             [
                 new MenuItem(
@@ -1030,7 +1030,7 @@ public static class Database
         var administratorMenu = new Menu(
             () =>
             {
-                DisplayData(s_staff.OfType<Administrator>().ToList());
+                DisplayData(s_staff.FindAll(staffMember => staffMember.GetType() == typeof(Administrator)));
             },
             [
                 new MenuItem(
