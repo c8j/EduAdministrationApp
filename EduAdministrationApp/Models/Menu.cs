@@ -14,7 +14,7 @@ public class Menu(Action? dataAction, List<MenuItem> menuItems)
     {
         {Prompt.Input, "Välj alternativ: "},
         {Prompt.Return, "Gå tillbaka"},
-        {Prompt.Exit, "Avsluta programmet"},
+        {Prompt.Exit, "Avsluta programmet och spara data"},
         {Prompt.InvalidOption, "Vänligen infoga ett giltigt alternativ."},
     };
 
