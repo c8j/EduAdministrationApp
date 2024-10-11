@@ -419,11 +419,11 @@ public static class Database
         Teacher? foundStaff = s_staff.FirstOrDefault(staffMember => staffMember.ID == id);
         if (foundStaff is not null)
         {
-            if (foundStaff is Teacher)
+            if (foundStaff.GetType() == typeof(Teacher))
             {
                 alreadyExistsPrompt = Prompt.TeacherAlreadyExists;
             }
-            else if (foundStaff is DepartmentHead)
+            else if (foundStaff.GetType() == typeof(DepartmentHead))
             {
                 alreadyExistsPrompt = Prompt.DepartmentHeadAlreadyExists;
             }
@@ -821,7 +821,11 @@ public static class Database
                 Console.WriteLine(s_prompts[Prompt.InvalidEntry]);
                 continue;
             }
-            Teacher? staffToAddTo = s_staff.FirstOrDefault(staffMember => staffMember.ID == staffID);
+            Teacher? staffToAddTo = s_staff.FirstOrDefault(
+                staffMember =>
+                (staffMember.ID == staffID) &&
+                (staffMember.GetType() == s_staffType[staffType])
+            );
             if (staffToAddTo is null)
             {
                 Console.WriteLine(s_prompts[staffNotFoundPrompt]);
@@ -881,7 +885,11 @@ public static class Database
                 Console.WriteLine(s_prompts[Prompt.InvalidEntry]);
                 continue;
             }
-            Teacher? staffToRemoveFrom = s_staff.FirstOrDefault(staffMember => staffMember.ID == staffID);
+            Teacher? staffToRemoveFrom = s_staff.FirstOrDefault(
+                staffMember =>
+                (staffMember.ID == staffID) &&
+                (staffMember.GetType() == s_staffType[staffType])
+            );
             if (staffToRemoveFrom is null)
             {
                 Console.WriteLine(s_prompts[staffNotFoundPrompt]);
