@@ -19,13 +19,13 @@ public class Teacher : IIdentifiable, IContactable
             Course course = Database.Courses.First(course => course.ID == id);
             sw.Write($"{id} - {course.Title}, ");
         }
-        return sw.ToString().TrimEnd(',');
+        return sw.ToString().TrimEnd().TrimEnd(',');
     }
 
     public override string ToString()
     {
         return
-            $"ID: {ID}, Utbildningsområde: {Department}, {ContactDetails}" +
-            $"{(CourseIDs.Count > 0 ? $"{Environment.NewLine} > Kurser: [{GetCourseNames()}]" : "")}";
+            $"{(CourseIDs.Count > 0 ? $" ↓ Kurser: [{GetCourseNames()}]{Environment.NewLine}" : "")}" +
+            $"ID: {ID}, Utbildningsområde: {Department}, {ContactDetails}";
     }
 }

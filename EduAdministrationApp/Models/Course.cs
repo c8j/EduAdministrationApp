@@ -19,14 +19,14 @@ public class Course : IIdentifiable
             Student student = Database.Students.First(student => student.ID == id);
             sw.Write($"{id} - {student.ContactDetails.FirstName} {student.ContactDetails.LastName}, ");
         }
-        return sw.ToString().TrimEnd(',');
+        return sw.ToString().TrimEnd().TrimEnd(',');
     }
 
     public override string ToString()
     {
         return
+            $"{(StudentIDs.Count > 0 ? $" ↓ Studenter: [{GetStudentNames()}]{Environment.NewLine}" : "")}" +
             $"ID: {ID}, {Title} - Längd: {LengthInWeeks} {(LengthInWeeks > 1 ? "veckor" : "vecka")}, " +
-            $"{StartDate:yyyy-MM-dd} : {EndDate:yyyy-MM-dd}, Distans: {(IsDistanceBased ? "Ja" : "Nej")}" +
-            $"{(StudentIDs.Count > 0 ? $"{Environment.NewLine} > Studenter: [{GetStudentNames()}]" : "")}";
+            $"{StartDate:yyyy-MM-dd} : {EndDate:yyyy-MM-dd}, Distans: {(IsDistanceBased ? "Ja" : "Nej")}";
     }
 }
