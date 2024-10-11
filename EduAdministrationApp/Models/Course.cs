@@ -9,34 +9,12 @@ public class Course : IIdentifiable
     public required DateTime StartDate { get; init; }
     public required DateTime EndDate { get; init; }
     public required bool IsDistanceBased { get; init; }
-
-    private readonly List<int> _studentIDs = [];
-    public IReadOnlyList<int> StudentIDs { get; }
-
-    public Course()
-    {
-        StudentIDs = _studentIDs.AsReadOnly();
-    }
-
-    public Course(List<int> studentIDs) : this()
-    {
-        _studentIDs.AddRange(studentIDs);
-    }
-
-    public void AddStudent(int studentID)
-    {
-        _studentIDs.Add(studentID);
-    }
-
-    public void RemoveStudent(int studentID)
-    {
-        _studentIDs.Remove(studentID);
-    }
+    public required List<int> StudentIDs { get; init; }
 
     private string GetStudentNames()
     {
         StringWriter sw = new();
-        foreach (int id in _studentIDs)
+        foreach (int id in StudentIDs)
         {
             Student student = Database.Students.First(student => student.ID == id);
             sw.Write($"{id} - {student.ContactDetails.FirstName} {student.ContactDetails.LastName}, ");
@@ -49,6 +27,6 @@ public class Course : IIdentifiable
         return
             $"ID: {ID}, {Title} - Längd: {LengthInWeeks} {(LengthInWeeks > 1 ? "veckor" : "vecka")}, " +
             $"{StartDate:yyyy-MM-dd} : {EndDate:yyyy-MM-dd}, Distans: {(IsDistanceBased ? "Ja" : "Nej")}" +
-            $"{(_studentIDs.Count > 0 ? "{Environment.NewLine} > Studenter: [{GetStudentNames()}]" : "")}";
+            $"{(StudentIDs.Count > 0 ? $"{Environment.NewLine} > Studenter: [{GetStudentNames()}]" : "")}";
     }
 }

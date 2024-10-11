@@ -290,7 +290,7 @@ public static class Database
                     valid = false;
                     break;
                 }
-                s_staff.First(staffMember => staffMember.ID == tempID).AddCourse(id);
+                s_staff.First(staffMember => staffMember.ID == tempID).CourseIDs.Add(id);
             }
             if (!valid)
             {
@@ -343,14 +343,15 @@ public static class Database
 
         //Finally create course object
         s_courses.Add(
-            new Course(studentIDs)
+            new Course()
             {
                 ID = id,
                 Title = title,
                 StartDate = startDate,
                 LengthInWeeks = weeks,
                 EndDate = endDate,
-                IsDistanceBased = isDistanceBased
+                IsDistanceBased = isDistanceBased,
+                StudentIDs = studentIDs
             }
         );
 
@@ -375,7 +376,7 @@ public static class Database
             s_courses.Remove(courseToRemove);
             foreach (Teacher relatedTeacher in s_staff.FindAll(staffMember => staffMember.CourseIDs.Contains(courseID)))
             {
-                relatedTeacher.RemoveCourse(courseID);
+                relatedTeacher.CourseIDs.Remove(courseID);
             }
             break;
         }
@@ -495,7 +496,8 @@ public static class Database
                 {
                     ID = id,
                     ContactDetails = contactDetails,
-                    Department = department
+                    Department = department,
+                    CourseIDs = []
                 }
             );
         }
@@ -516,7 +518,8 @@ public static class Database
                         ID = id,
                         ContactDetails = contactDetails,
                         Department = department,
-                        EmployedOn = employedOn
+                        EmployedOn = employedOn,
+                        CourseIDs = []
                     }
                 );
             }
@@ -528,7 +531,8 @@ public static class Database
                         ID = id,
                         ContactDetails = contactDetails,
                         Department = department,
-                        EmployedOn = employedOn
+                        EmployedOn = employedOn,
+                        CourseIDs = []
                     }
                 );
             }
@@ -679,7 +683,7 @@ public static class Database
             s_students.Remove(studentToRemove);
             foreach (Course relatedCourse in s_courses.FindAll(course => course.StudentIDs.Contains(studentID)))
             {
-                relatedCourse.RemoveStudent(studentID);
+                relatedCourse.StudentIDs.Remove(studentID);
             }
             break;
         }
@@ -718,7 +722,7 @@ public static class Database
                 Console.WriteLine(s_prompts[Prompt.StudentAlreadyAssigned]);
                 return;
             }
-            courseToAddTo.AddStudent(studentID);
+            courseToAddTo.StudentIDs.Add(studentID);
             break;
         }
 
@@ -756,7 +760,7 @@ public static class Database
                 Console.WriteLine(s_prompts[Prompt.StudentNotAssigned]);
                 return;
             }
-            courseToRemoveFrom.RemoveStudent(studentID);
+            courseToRemoveFrom.StudentIDs.Remove(studentID);
             break;
         }
 
@@ -816,7 +820,7 @@ public static class Database
                 Console.WriteLine(s_prompts[staffAlreadyAssignedPrompt]);
                 return;
             }
-            staffToAddTo.AddCourse(courseID);
+            staffToAddTo.CourseIDs.Add(courseID);
             break;
         }
 
@@ -876,7 +880,7 @@ public static class Database
                 Console.WriteLine(s_prompts[staffNotAssignedPrompt]);
                 return;
             }
-            staffToRemoveFrom.RemoveCourse(courseID);
+            staffToRemoveFrom.CourseIDs.Remove(courseID);
             break;
         }
 
